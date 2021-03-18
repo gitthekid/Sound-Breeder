@@ -1,75 +1,80 @@
-# Capstone Project
+Problem Statement:
 
-Your Capstone project is the culmination of your time at GA. You will be tasked with developing an interesting question, collecting the data required to model that data, developing the strongest model (or models) for prediction, and communicating those findings to other data scientists and non-technical individuals. This introductory document lays out the five consitutent portions of the project and their due dates.
+Can I utilize a neural network architecture to combine two different sounds into a new composite sound? Furthermore, can I do this in a way that would be compositionally useful when making music?
 
-Not sure where to start? Need some inspiration? Check out some past student capstone projects at the bottom of this README: [CLICK HERE](#example-projects)
+This interest arises from the immense breakthroughs in visual GANs, in particular ArtBreeder, a conolutional neural network based model that allows for intelligent merging of different images.
+https://www.artbreeder.com/
 
-## Your Deliverables
 
-- A well-made predictive model using either structured or unstructured machine learning techniques (or other technique approved in advanced by the global instructors), as well as clean, well-written code.
-- A technical report aimed at fellow data scientists that explains your process and findings
-- A public presentation of your findings aimed at laypeople.
 
-### **[Capstone, Part 1: Topic Proposals](./01/)**
+EDA:
+There are countless audio generation strategies including WaveNet, GanSynth, and DDSP, amongst numerous others. I chose DDSP, an autorgressive model that uses synthesizers to generate audio signals by automating filters, oscillators, and reverbation to adapt the waveform realtime.
+I chose DDSP because it:
+    Has relatively the fastest training times
+    Does not need to be trained on pre-tagged data, and thus has extremely broad creative applications
+    The tone/timbre of each instrument can applied to any monophonic audio sample
+    DDSP is highly transparent, and highly tweakable (pitch/loudness/reverb)
+    
+DDSP must be trained on monophonic, that is non-chordal data.
+As such the data I brought in had to be cleaned to meet this criteria.
 
-In Part 1, get started by choosing **three potential topics and problems**, describing your goals & criteria for success, potential audience(s), and identifying 1-2 potential datasets. In the field of data science, good projects are practical. Your capstone project should be manageable and affect a real world audience. This might be a domain you are familiar with, a particular interest you have, something that affects a community you are involved in, or an area that relates to a field you wish to work in.
+I modeled 6 sounds, John Lennon vocals, Paul McCartney vocals, a model trained on both Lennon and McCartney Vocals, Cello, Electric Guitar, and a model trained on both Cello and Electric Guitar.
 
-One of the best ways to test ideas quickly is to share them with others. A good data scientist has to be comfortable discussing ideas and presenting to audiences. That's why for Part 1 of your Capstone project, you'll be preparing a lightning talk in addition to your initial notebook outlining the scope of your project.  You will present your candidate topics in a slide deck, and should be prepared to answer questions and defend your data selection(s). Presentations should take no more than 3-5 minutes.
+I trained the Beatles vocals on isolated vocals on youtube, and chopped them up to make sure only monophonic information was in the training data use mp3cutter.net. They were trained on many separate songs vocals, meaning many different reverberations, and vocal tones. There was about 10 minutes of audio to train the Lennon model, and 10 minute of audio to train the McCartney model, and 20 minutes of audio to train their composite model.
 
-**The ultimate choice of topic for your capstone project is yours!** However, this is research and development work. Sometimes projects that look easy can be difficult and vice versa. It never hurts to have a second (or third) option available.
+I trained the Cello/Electric Guitar models on individual youtube videos of Cello Suite No.1 by Bach, that were both 20 minutes long. This data did not need to be cleaned, as Cello Suite No.1 is almost entirely monophonic. 
 
-- **Goal**: Prepare a 3-5 minute lightning talk that covers three potential topics, including potential sources of data, goals, metrics and audience.
-- **Due**: See `course-info`
 
-### **[Capstone, Part 2: Problem Statement + Data](./02/)**
+Modeling and Results:
+The Neural Network used in DDSP is mostly imported with the DDSP library. However, to describe its architechture nonetheless:
+It is a feed forward neural network with an architechture including two Encoders for pitch (via CREPE, a pre-trained model with fixed weights), and loudness, and one decoder comosed of 2 MLP layers going into a concatenation layer, a GRU layer, a concatenation layer, another MLP layer, into two desne layers that ouput into the additive and subtractive synthesizers.
+It uses the Adam Optimization function, and a Multi-Scale Spectral Loss Function. Further it has 165,000 dimensions.
 
-For Part 2, provide a clear statement of the problem that you have chosen and an overview of your approach to solving that problem. Summarize your objectives, goals & success metrics, and any risks & assumptions. Outline your proposed methods and models. **Your data should be in hand by this point in the process!**
 
-**Again, your data should be in hand by this point the process!**
+The notebooks are split up into a Train Autencoder Notebook, where we train the DDSP model to resynthesize the audio, and a Timbre Transfer Notebook, where we apply the trained autencoder to new monophonic pitch, and loudness instruments.
 
-- **Goal**: Gather your data and describe your proposed approach to your local instructor.
-- **Due**: See `course-info`
+Judging the effectiveness of modelled audio is best done by listening to it, rather than through graphs. As such, all the generated audio, alongside their performance graphs, including loss functions are included in the Autencoder folder.
 
-### **[Capstone, Part 3: Progress Report + Preliminary Findings](./03/)**
 
-In Part 3, you'll create a progress report of your work in order to get feedback along the way. Describe your approach, initial EDA, initial results, and any setbacks or lessons learned so far. Your report should include updated visual and statistical analysis of your data. You’ll also meet with your local instructional team to get feedback on your results so far!
 
-- **Goal**: Discuss progress and setbacks, include visual and statistical analysis, review with instructor.
-- **Due**: See `course-info`
+Conclusions:
+The voice model had many weaknesses, and by and large did not sound accurate to the source sounds. 
+This is likely due to many factors including:
+    Overly complex audio information as speech/singing has too many tones to easily model
+    Training audio was from different recordings with different room noise.
+The cello/guitar model had more accurate tone modeling than the voices, particularly the cello. However, none of the models were accurate enough at modeling the source sound to be ideal.   
 
-### **[Capstone, Part 4: Report Writeup + Technical Analysis](./04/)**
 
-By now, you're ready to apply your modeling skills to make machine learning predictions. Your goal for Part 4 is to develop a technical document (in the form of Jupyter notebook) that can be shared among your peers.
+That being said:
+In conclusion, I was able to combine two sounds in an interesting way that has potential creative applications. As such, the original problem statement has been fulfilled.
 
-Document your research and analysis including a summary, an explanation of your modeling approach as well as the strengths and weaknesses of any variables in the process. You should provide insight into your analysis, using best practices like cross validation or applicable prediction metrics.
+That being said the DDSP model did not provide very good results as far as accuracy of modeling are concerned.
 
-- **Goal**: Detailed report and code with a summary of your statistical analysis, model, and evaluation metrics.
-- **Due**: See `course-info`
+Furthermore, the tone combinations produced by the model were not that impressive either.
 
-### **[Capstone, Part 5: Presentation + Recommendations](./05/)**
+In general, audio-generating models are highly cpu-intensive. More well-trained models would likely perform better.
 
-Whether during an interview or as part of a job, you will frequently have to present your findings to business partners and other interested parties - many of whom won't know anything about data science! That's why for Part 5, you'll create a presentation of your previous findings with a non-technical audience in mind.
 
-You should already have the analytical work complete, so now it's time to clean up and clarify your findings. Come up with a detailed slide deck or interactive demo that explains your data, visualizes your model, describes your approach, articulates strengths and weaknesses, and presents specific recommendations. Be prepared to explain and defend your model to an inquisitive audience!
+Next Steps:
+To improve these models given the framework I already have, I would simply train the autencoders for a few more days each, and drop their loss function for more accurate modeling.
 
-- **Goal**: Detailed presentation deck that relates your data, model, and findings to a non-technical audience.
-- **Due**: See `course-info`
 
-<a name="example-projects"></a>
-### Example Projects
+To improve the outcome with a different set of models:
+I am interested in creating a framework to apply CREPE to GanSynth. As the main reason I did not use GanSynth is because it required data that was tagged with pitch and loudness to model. The CREPE encoder automatically identifies pitch in raw audio for the model. As such, I would be able to develop a model with more specific control over sound combinations, more similar to ArtBreeder than the DDSP modeling, as GanSynth is a CNN-based model.
 
-Below are some great capstone projects submitted by past DSI students!
+Finally,
+With far  superior computing power WaveNet would have certainly performed orders of magnitudes better than any of the other models. However, WaveNet is extremely computationally expensive. When I have more access to greater computing power I will be sure to integrate WaveNet more.
 
-* [Kenya Chauche, DSI-10](https://github.com/KenyaChauche/sonnet-generation) built a natural language generation program trained on Shakespeare's sonnets
-* [Molly Baird, DSI-11](https://github.com/mollycbaird/ComputerVisionSET) wanted to computerize the game of SET, and succeeded admirably
-* [Daniel Johnston, DSI-2](https://github.com/djkjohnston/ML_from_scratch_GA_DSI_Capstone) built several key machine learning algos from scratch in python, comparing their performance to the scikit-learn implementations.  
-* [Alex Schultz, DSI-3](https://github.com/fullquartpress/DSI-Capstone) predicts spot coffee (commodity coffee bean) price changes from sentiment analysis of an industry trade publication.  
-* [Brice Walker, DSI-3](https://github.com/bricewalker/Hey-Jetson) wanted to play with his Jetson GPU and built voice transcription _from scratch_.  
-* [Caitlin Streamer, DSI-4](https://github.com/c-streams/Pneumonia) worked on a Kaggle dataset to predict pneumonia from chest X-rays.  
-* [Brian Osgood, DSI-04](https://github.com/osgoodbl/PyFilter) built a bot that crawls twitter and identifies whether an image tagged 'lamborghini' is actually a lamborghini.  
-* [Frank Turner, DSI-04](https://github.com/frankturnerv/Fashioning_Models_from_Fashion_Models) uses image recognition to identify the colors used in a fashion season's palette.  
-* [DSI-06, team](https://github.com/balak4/Optimizing-Evac-Routes) This is actually the DSI-6 group project. It's here because it's really, really impressive.  
-* [Amy Taylor, DSI-06](https://github.com/amytaylor330/CNN_for_Dance_Music_Classification_repost) wanted to quantify the difference between types of dance music.  
-* [Veronica Giannotta, DSI-06](https://github.com/vgiannotta/Emotional-Impacts-of-Viral-Content) delved into the dark side of the internet and evaluated the emotional sentiment of social media content that goes viral.
-* [Derek Steffan, DSI-07](https://github.com/dsteffan/twitch_chat_analysis) automates the process of creating twitch highlight reels using sentiment analysis, markov chains, and Bayesian analysis.  
-* [Sebastian Alvis, League of Legends](https://github.com/salvis2/SpringboardAlvis/tree/master/capstone_project_1) Not a GA capstone, but a very compelling case for applying data science to your interests to come up with a good capstone.
+
+
+**NOTE
+Autencoders could not be included in GitHub repository because file sizes were too big to upload to github.
+
+
+
+
+
+
+
+
+
