@@ -1,3 +1,6 @@
+<img width="1025" alt="soundbreeder" src="https://user-images.githubusercontent.com/75597941/182925437-0c9e8fe1-e0a1-4379-b85f-65168681a857.png">
+
+
 Problem Statement:
 
 Can I utilize a neural network architecture to combine two different sounds into a new composite sound? Furthermore, can I do this in a way that would be compositionally useful when making music?
