@@ -5,7 +5,7 @@ Problem Statement:
 
 Can I utilize a neural network architecture to combine two different sounds into a new composite sound? Furthermore, can I do this in a way that would be compositionally useful when making music?
 
-This interest arises from the immense breakthroughs in visual GANs, in particular ArtBreeder, a conolutional neural network based model that allows for intelligent merging of different images.
+This interest arises from the immense breakthroughs in visual GANs, in particular ArtBreeder, a convolutional neural network based model that allows for intelligent merging of different images.
 https://www.artbreeder.com/
 
 
