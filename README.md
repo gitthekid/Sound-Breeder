@@ -13,10 +13,10 @@ https://www.artbreeder.com/
 EDA:
 There are countless audio generation strategies including WaveNet, GanSynth, and DDSP, amongst numerous others. I chose DDSP, an autorgressive model that uses synthesizers to generate audio signals by automating filters, oscillators, and reverbation to adapt the waveform realtime.
 I chose DDSP because it:
-    Has relatively the fastest training times
-    Does not need to be trained on pre-tagged data, and thus has extremely broad creative applications
-    The tone/timbre of each instrument can applied to any monophonic audio sample
-    DDSP is highly transparent, and highly tweakable (pitch/loudness/reverb)
+    Has relatively the fastest training times, 
+    Does not need to be trained on pre-tagged data, and thus has extremely broad creative applications, 
+    The tone/timbre of each instrument can applied to any monophonic audio sample, 
+    DDSP is highly transparent, and highly tweakable (pitch/loudness/reverb).
     
 DDSP must be trained on monophonic, that is non-chordal data.
 As such the data I brought in had to be cleaned to meet this criteria.
