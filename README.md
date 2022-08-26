@@ -30,7 +30,7 @@ I trained the Cello/Electric Guitar models on individual youtube videos of Cello
 
 Modeling and Results:
 The Neural Network used in DDSP is mostly imported with the DDSP library. However, to describe its architechture nonetheless:
-It is a feed forward neural network with an architechture including two Encoders for pitch (via CREPE, a pre-trained model with fixed weights), and loudness, and one decoder comosed of 2 MLP layers going into a concatenation layer, a GRU layer, a concatenation layer, another MLP layer, into two desne layers that ouput into the additive and subtractive synthesizers.
+It is a feed forward neural network with an architechture including two Encoders for pitch (via CREPE, a pre-trained model with fixed weights), and loudness, and one decoder composed of 2 MLP layers going into a concatenation layer, a GRU layer, a concatenation layer, another MLP layer, into two dense layers that ouput into the additive and subtractive synthesizers.
 It uses the Adam Optimization function, and a Multi-Scale Spectral Loss Function. Further it has 165,000 dimensions.
 
 
@@ -43,7 +43,7 @@ Judging the effectiveness of modelled audio is best done by listening to it, rat
 Conclusions:
 The voice model had many weaknesses, and by and large did not sound accurate to the source sounds. 
 This is likely due to many factors including:
-    Overly complex audio information as speech/singing has too many tones to easily model
+    Overly complex audio information as speech/singing has too many tones to easily model, 
     Training audio was from different recordings with different room noise.
 The cello/guitar model had more accurate tone modeling than the voices, particularly the cello. However, none of the models were accurate enough at modeling the source sound to be ideal.   
 
